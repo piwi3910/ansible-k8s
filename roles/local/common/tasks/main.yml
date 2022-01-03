@@ -28,6 +28,11 @@
     enabled: yes
     state: started
 
+- name: set hostnames
+  ansible.builtin.shell:
+    cmd: |
+      hostnamectl set-hostname "{{ ansible_hostname }}"
+
 - name: Update the /etc/hosts file with node name
   tags: etchostsupdate
   lineinfile:

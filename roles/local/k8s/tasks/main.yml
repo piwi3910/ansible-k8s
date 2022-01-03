@@ -1,4 +1,20 @@
 ---
+- name: install prereq
+  ansible.builtin.package:
+    state: present
+    name:
+      - ca-certificates
+      - gnugp
+      - lsb-release
+      - curl
+      - apt-transport-https
+
+- name: add Docker GPG key
+  ansible.builtin.shell:
+    cmd: |
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    creates: /usr/share/keyrings/docker-archive-keyring.gpg
+
 - name: copy over containerd modules template
   template:
     src: containerd.conf.j2
@@ -42,10 +58,13 @@
         reload: yes
         sysctl_set: yes
 
-- name: copy over containerd repo file
-  template:
-    dest: /etc/yum.repos.d/containerd.repo
-    src: containerd.repo.j2
+- name: set containerd repo
+  ansible.builtin.shell:
+    cmd: |
+      echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    creates: /etc/apt/sources.list.d/docker.list
 
 - name: install containerd
   ansible.builtin.package:
@@ -58,20 +77,32 @@
          sudo containerd config default | sudo tee /etc/containerd/config.toml
          sudo systemctl restart containerd
 
-- name: copy over kubernetes repo file
-  template:
-    dest: /etc/yum.repos.d/kubernetes.repo
-    src: kubernetes.repo.j2
+- name: add Kubernetes GPG key
+  ansible.builtin.shell:
+    cmd: |
+      sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    creates: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+
+- name: set Kubernetes repo
+  ansible.builtin.shell:
+    cmd: |
+      echo \
+      "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ \
+      kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
+    creates: /etc/apt/sources.list.d/kubernetes.list
 
 - name: install Kubernetes packages and prereq
-  dnf:
+  ansible.builtin.package:
     name:
       - kubelet
       - kubeadm
       - kubectl
-      - iproute-tc
     state: present
-    disable_excludes: kubernetes
+
+- name: stop kubernetes packages from updating by a simple apt upgrade
+  ansible.builtin.shell:
+    cmd: |
+      sudo apt-mark hold kubelet kubeadm kubectl
 
 - name: create the kube user account
   user:
@@ -95,13 +126,13 @@
   systemd: name=kubelet enabled=yes
 
 - include_tasks: init.yml
-  when: inventory_hostname in groups['ah_masters'][0]
+  when: inventory_hostname in groups['k8s_masters'][0]
 
 - include_tasks: masters.yml
-  when: inventory_hostname in groups['ah_masters'][1:]
+  when: inventory_hostname in groups['k8s_masters'][1:]
 
 - include_tasks: workers.yml
-  when: inventory_hostname in groups['ah_workers']
+  when: inventory_hostname in groups['k8s_workers']
 
 
 

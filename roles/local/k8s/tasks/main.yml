@@ -1,6 +1,6 @@
 ---
 - name: install prereq
-  ansible.builtin.package:
+  ansible.builtin.apt:
     state: present
     name:
       - ca-certificates
@@ -8,6 +8,7 @@
       - lsb-release
       - curl
       - apt-transport-https
+    update_cache: yes
 
 - name: add Docker GPG key
   ansible.builtin.shell:
@@ -92,12 +93,13 @@
     creates: /etc/apt/sources.list.d/kubernetes.list
 
 - name: install Kubernetes packages and prereq
-  ansible.builtin.package:
+  ansible.builtin.apt:
     name:
       - kubelet
       - kubeadm
       - kubectl
     state: present
+    update_cache: yes
 
 - name: stop kubernetes packages from updating by a simple apt upgrade
   ansible.builtin.shell:

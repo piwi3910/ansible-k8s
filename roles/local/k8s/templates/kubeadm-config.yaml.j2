@@ -8,8 +8,8 @@ kubernetesVersion: stable
 clusterName: kubernetes
 apiServer:
   certSANs:
-  - "{{ hostvars[groups['ah_lb'][0]]['haproxy_vip'] }}"
-controlPlaneEndpoint: "{{ hostvars[groups['ah_lb'][0]]['haproxy_vip'] }}:6443"
+  - "{{ kubernetes_loadbalancer }}"
+controlPlaneEndpoint: "{{ kubernetes_loadbalancer }}:6443"
 networking:
   dnsDomain: cluster.local
   podSubnet: {{ kubernetes_pod_network }}

@@ -12,7 +12,7 @@
           - jq
           - nfs-client
           - nfs-common
-          - iscsi-initiator-utils
+          - open-isns-utils
         state: latest
 
     - name: install needed pip modules

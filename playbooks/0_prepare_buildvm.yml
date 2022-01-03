@@ -46,8 +46,8 @@
         path: "../config/known_hosts"
         state: touch
 
-    - name: disable and stop firewalld
+    - name: disable and stop ufw
       systemd:
-        name: firewalld
+        name: ufw
         state: stopped
         enabled: no

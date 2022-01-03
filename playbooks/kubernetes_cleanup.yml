@@ -8,4 +8,10 @@
         cmd: |
           kubeadm reset --force
 
+    - name: remove cluster initialized
+      become: yes
+      file:
+        path: $HOME/cluster_initialized.txt
+        state: absent
+
 

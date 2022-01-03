@@ -1,0 +1,2 @@
+consul_replicas: "5"
+consul_http_port: "30500"

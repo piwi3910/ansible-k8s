@@ -1,0 +1,25 @@
+---
+- name: add concourse chart repo
+  kubernetes.core.helm_repository:
+    name: concourse
+    repo_url: "https://concourse-charts.storage.googleapis.com/"
+
+#- name: copy over values file
+#  template:
+#    src: "concourse_helm_values.yml.j2"
+#    dest: "/tmp/concourse_helm_values.yml"
+
+- name: deploy concourse
+  kubernetes.core.helm:
+    name: concourse
+    chart_ref: concourse/concourse
+    release_namespace: concourse
+    create_namespace: yes
+    wait: True
+#    values_files:
+#      - /tmp/concourse_helm_values.yml
+
+#- name: cleanup files
+#  file:
+#    name: /tmp/concourse_helm_values.yml
+#    state: absent

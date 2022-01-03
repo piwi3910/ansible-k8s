@@ -1,0 +1,25 @@
+---
+- name: add metallb chart repo
+  kubernetes.core.helm_repository:
+    name: metallb
+    repo_url: "https://metallb.github.io/metallb"
+
+- name: copy over values file
+  template:
+    src: "metallb_helm_values.yml.j2"
+    dest: "/tmp/metallb_helm_values.yml"
+
+- name: deploy metallb
+  kubernetes.core.helm:
+    name: metallb
+    chart_ref: metallb/metallb
+    release_namespace: metallb-system
+    create_namespace: true
+    wait: True
+    values_files:
+      - /tmp/metallb_helm_values.yml
+
+- name: cleanup files
+  file:
+    name: /tmp/metallb_helm_values.yml
+    state: absent

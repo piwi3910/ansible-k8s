@@ -1,0 +1,15 @@
+---
+- name: copy over workers join
+  template:
+    src: kubernetes_worker_join_command.j2
+    dest: /tmp/kubernetes_worker_join_command
+
+- name: Changing perm of /tmp/kubernetes_worker_join_command , adding "+x"
+  file: dest=/tmp/kubernetes_worker_join_command mode=a+x
+
+- name: join workers to masters
+  shell:
+    cmd: /tmp/kubernetes_worker_join_command
+  args:
+    chdir: $HOME
+    creates: cluster_initialized.txt

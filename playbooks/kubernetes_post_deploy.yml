@@ -1,0 +1,43 @@
+---
+- hosts: kubernetes
+  become: yes
+  gather_facts: yes
+  roles:
+    - helm
+  pre_tasks:
+    - name: install prerequirements
+      ansible.builtin.dnf:
+        name:
+          - git
+          - jq
+          - nfs-utils
+          - iscsi-initiator-utils
+        state: latest
+
+    - name: install needed pip modules
+      ansible.builtin.pip:
+        name:
+          - openshift
+          - pyyaml
+
+    - name: inject iscsi initiator name
+      ansible.builtin.shell:
+        cmd: |
+            echo "InitiatorName=$(/sbin/iscsi-iname)" > /etc/iscsi/initiatorname.iscsi
+
+    - name: set open-iscsi to start on boot and start service
+      ansible.builtin.service:
+        name: iscsid
+        state: started
+        enabled: yes
+
+- hosts: ah_masters[0]
+  become: no
+  gather_facts: yes
+  roles:
+    - calico
+    - longhorn
+    - metallb
+    - cert-manager
+    - nginx
+    - rancher

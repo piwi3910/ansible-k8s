@@ -1,0 +1,26 @@
+---
+- name: add hashicorp chart repo
+  kubernetes.core.helm_repository:
+    name: hashicorp
+    repo_url: "https://helm.releases.hashicorp.com"
+
+- name: copy over values file
+  template:
+    src: "consul_helm_values.yml.j2"
+    dest: "/tmp/consul_helm_values.yml"
+
+- name: deploy consul
+  kubernetes.core.helm:
+    name: consul
+    chart_ref: hashicorp/consul
+    release_namespace: consul
+    create_namespace: true
+    wait: True
+    values_files:
+      - /tmp/consul_helm_values.yml
+
+- name: cleanup files
+  file:
+    name: /tmp/consul_helm_values.yml
+    state: absent
+

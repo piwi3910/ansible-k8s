@@ -1,0 +1,15 @@
+clone_enable: true
+proxy_vm_enable: false
+proxy_rpm_enable: false
+proxy_docker_enable: false
+
+#only set one to true below
+certmanager_ca: true
+certmanager_acme: false
+certmanager_acme_dns: false
+
+#existing private docker repo
+use_internal_docker_repo: true
+internal_docker_repo_url: "192.168.0.35:1234"
+internal_docker_repo_username: "admin"
+internal_docker_repo_password: "Jbz49teq01!"

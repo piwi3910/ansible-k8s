@@ -1,0 +1,107 @@
+---
+- name: copy over containerd modules template
+  template:
+    src: containerd.conf.j2
+    dest: /etc/modules-load.d/containerd.conf
+
+- name: modprobe modules
+  block:
+    - name: modprobe overlay
+      community.general.modprobe:
+        name: overlay
+        state: present
+
+    - name: modprobe br_netfilter
+      community.general.modprobe:
+        name: br_netfilter
+        state: present
+
+- name: set sysctl
+  block:
+    - name: set net.ipv4.ip_forward
+      ansible.posix.sysctl:
+        name: net.ipv4.ip_forward
+        value: "1"
+        state: present
+        reload: yes
+        sysctl_set: yes
+
+    - name: set net.bridge.bridge-nf-call-iptables
+      ansible.posix.sysctl:
+        name: net.bridge.bridge-nf-call-iptables
+        value: "1"
+        state: present
+        reload: yes
+        sysctl_set: yes
+
+    - name: set net.bridge.bridge-nf-call-ip6tables
+      ansible.posix.sysctl:
+        name: net.bridge.bridge-nf-call-iptables
+        value: "1"
+        state: present
+        reload: yes
+        sysctl_set: yes
+
+- name: copy over containerd repo file
+  template:
+    dest: /etc/yum.repos.d/containerd.repo
+    src: containerd.repo.j2
+
+- name: install containerd
+  ansible.builtin.package:
+    name: containerd
+    state: present
+
+- name: configure containerd
+  shell: |
+         sudo mkdir -p /etc/containerd
+         sudo containerd config default | sudo tee /etc/containerd/config.toml
+         sudo systemctl restart containerd
+
+- name: copy over kubernetes repo file
+  template:
+    dest: /etc/yum.repos.d/kubernetes.repo
+    src: kubernetes.repo.j2
+
+- name: install Kubernetes packages and prereq
+  dnf:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+      - iproute-tc
+    state: present
+    disable_excludes: kubernetes
+
+- name: create the kube user account
+  user:
+    name: kube
+    state: present
+    createhome: yes
+    shell: /bin/bash
+
+- name: allow 'kube' to use sudo without needing a password
+  lineinfile:
+    dest: /etc/sudoers
+    line: 'kube ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: set up authorized keys for the kube user
+  authorized_key: user=kube key="{{item}}"
+  with_file:
+    - ~/.ssh/id_rsa.pub
+
+- name: Enable Kubelet
+  systemd: name=kubelet enabled=yes
+
+- include_tasks: init.yml
+  when: inventory_hostname in groups['ah_masters'][0]
+
+- include_tasks: masters.yml
+  when: inventory_hostname in groups['ah_masters'][1:]
+
+- include_tasks: workers.yml
+  when: inventory_hostname in groups['ah_workers']
+
+
+

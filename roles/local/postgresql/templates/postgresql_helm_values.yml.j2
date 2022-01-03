@@ -1,0 +1,7 @@
+global:
+  postgresql:
+    username: "{{ posgresql_username }}"
+    password: "{{ postgresql_password }}"
+
+persistence:
+  size: "{{ postgresql_PV_size_GB }}"

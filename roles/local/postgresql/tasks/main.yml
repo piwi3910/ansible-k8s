@@ -1,0 +1,25 @@
+---
+- name: add bitnami chart repo
+  kubernetes.core.helm_repository:
+    name: bitnami
+    repo_url: "https://charts.bitnami.com/bitnami"
+
+- name: copy over values file
+  template:
+    src: "postgresql_helm_values.yml.j2"
+    dest: "/tmp/postgresql_helm_values.yml"
+
+- name: deploy PostgreSQL in HA mode
+  kubernetes.core.helm:
+    name: postgresql
+    chart_ref: bitnami/postgresql-ha
+    release_namespace: postgresql
+    create_namespace: yes
+    wait: True
+    values_files:
+      - /tmp/postgresql_helm_values.yml
+
+- name: cleanup files
+  file:
+    name: /tmp/postgresql_helm_values.yml
+    state: absent

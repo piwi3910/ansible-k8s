@@ -1,0 +1,41 @@
+---
+- name: check if Helm is already installed
+  stat:
+    path: /usr/local/sbin/helm
+  register: helm
+
+- name: install helm
+  block:
+    - name: create temp dir
+      ansible.builtin.file:
+        path: "/tmp/helm-{{ version }}"
+        state: directory
+
+    - name: get helm {{ version }} and unpack
+      ansible.builtin.unarchive:
+        src: "https://get.helm.sh/helm-v{{ version }}-linux-amd64.tar.gz"
+        dest: "/tmp/helm-{{ version }}"
+        remote_src: yes
+
+    - name: copy helm to /usr/local/sbin/helm
+      copy:
+        remote_src: yes
+        src: "/tmp/helm-{{ version }}/linux-amd64/helm"
+        dest: /usr/local/sbin/helm
+
+    - name: Changing perm of /usr/local/sbin/helm , adding "+x"
+      file: dest=/usr/local/sbin/helm mode=a+x
+
+    - name: cleanup temp dir
+      ansible.builtin.file:
+        path: "/tmp/helm-{{ version }}"
+        state: absent
+  when: not helm.stat.exists
+
+- name: Install Helm Diff
+  kubernetes.core.helm_plugin:
+    state: present
+    plugin_path: https://github.com/databus23/helm-diff
+
+
+

@@ -1,0 +1,14 @@
+---
+apiVersion: operator.tigera.io/v1
+kind: Installation
+metadata:
+  name: default
+spec:
+  calicoNetwork:
+    bgp: Disabled
+    ipPools:
+    - blockSize: 26
+      cidr: {{ kubernetes_pod_network }}
+      encapsulation: IPIP
+      natOutgoing: Enabled
+      nodeSelector: all()

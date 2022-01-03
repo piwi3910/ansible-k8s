@@ -1,0 +1,6 @@
+collections:
+  - community.vmware
+  - kubernetes.core
+  - ansible.posix
+  - community.general
+

@@ -1,0 +1,18 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+certificateKey: {{ kubernetes_certificate_key.stdout }}
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+kubernetesVersion: stable
+clusterName: kubernetes
+apiServer:
+  certSANs:
+  - "{{ hostvars[groups['ah_lb'][0]]['haproxy_vip'] }}"
+controlPlaneEndpoint: "{{ hostvars[groups['ah_lb'][0]]['haproxy_vip'] }}:6443"
+networking:
+  dnsDomain: cluster.local
+  podSubnet: {{ kubernetes_pod_network }}
+  serviceSubnet: {{ kubernetes_svc_network }}
+
+

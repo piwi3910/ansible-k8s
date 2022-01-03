@@ -1,0 +1,15 @@
+- name: copy over template
+  template:
+    src: self-signedCA.yml.j2
+    dest: /tmp/self-signedCA.yml
+
+- name: create Selfsigned CA with cert-manager
+  kubernetes.core.k8s:
+    state: present
+    src: /tmp/self-signedCA.yml
+
+- name: cleanup files
+  file:
+    name: /tmp/self-signedCA.yml
+    state: absent
+

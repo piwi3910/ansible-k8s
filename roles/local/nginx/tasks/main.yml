@@ -1,0 +1,26 @@
+---
+- name: add nginx chart repo
+  kubernetes.core.helm_repository:
+    name: nginx-stable
+    repo_url: "https://helm.nginx.com/stable"
+
+- name: copy over values file
+  template:
+    src: "nginx_helm_values.yml.j2"
+    dest: "/tmp/nginx_helm_values.yml"
+
+- name: deploy nginx
+  kubernetes.core.helm:
+    name: nginx-ingress
+    chart_ref: nginx-stable/nginx-ingress
+    release_namespace: nginx-system
+    create_namespace: true
+    wait: True
+    values_files:
+      - /tmp/nginx_helm_values.yml
+
+- name: cleanup files
+  file:
+    name: /tmp/nginx_helm_values.yml
+    state: absent
+

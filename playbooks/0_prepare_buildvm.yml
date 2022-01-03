@@ -1,0 +1,53 @@
+---
+
+- hosts: localhost
+  connection: local
+  vars:
+    force_purge: false
+    roles_installation_dir: roles/public
+    collections_installation_dir: collections
+    installation_prefix: ../
+    install_public_roles: true
+    install_public_collections: true
+  pre_tasks:
+    - name: install needed pip modules
+      pip:
+        name:
+          - netaddr
+          - jmespath
+
+    - name: Remove existing public roles
+      file:
+        path: "{{ installation_prefix }}{{ roles_installation_dir }}"
+        state: absent
+      when: force_purge | bool
+
+    - name: Install all public roles
+      command: >
+        ansible-galaxy install
+        {{ ( force_purge | bool ) | ternary('--force','') }}
+        --role-file {{ installation_prefix }}roles/requirements.yml
+        --roles-path {{ installation_prefix }}{{ roles_installation_dir }}
+      when: install_public_roles | bool
+
+    - name: Install all public collections
+      command: >
+        ansible-galaxy collection install
+        {{ ( force_purge | bool ) | ternary('--force','') }}
+        --requirements-file {{ installation_prefix }}collections/requirements.yml
+        --collections-path {{ installation_prefix }}{{ collections_installation_dir }}
+      when: install_public_collections | bool
+
+    - name: cleanup old ssh known_hosts
+      file:
+        path: "../config/known_hosts"
+        state: absent
+    - file:
+        path: "../config/known_hosts"
+        state: touch
+
+    - name: disable and stop firewalld
+      systemd:
+        name: firewalld
+        state: stopped
+        enabled: no

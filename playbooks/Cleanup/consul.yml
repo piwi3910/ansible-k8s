@@ -1,0 +1,6 @@
+---
+- hosts: ah_masters[0]
+  become: no
+  gather_facts: yes
+  roles:
+    - consul

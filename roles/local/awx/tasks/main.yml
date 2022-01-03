@@ -1,0 +1,64 @@
+---
+- name: check out AWX operator git repo
+  ansible.builtin.git:
+    repo: https://github.com/ansible/awx-operator.git
+    dest: /tmp/awx
+    version: "{{ version }}"
+    force: yes
+
+- name: Create a AWX namespace
+  kubernetes.core.k8s:
+    name: awx
+    api_version: v1
+    kind: Namespace
+    state: present
+
+- name: install awx operator
+  ansible.builtin.shell:
+    chdir: /tmp/awx
+    cmd: |
+          export NAMESPACE=awx
+          make deploy
+    creates: /tmp/awx_ansible_installed
+
+- name: deploy awx with operator
+  kubernetes.core.k8s:
+    state: present
+    wait: True
+    definition:
+      apiVersion: awx.ansible.com/v1beta1
+      kind: AWX
+      metadata:
+        name: awx
+        namespace: awx
+      spec:
+        service_type: ClusterIP
+
+- name: expose awx via fixed nodeport to workaround operator bug
+  kubernetes.core.k8s:
+    state: present
+    wait: True
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        labels:
+          app.kubernetes.io/component: awx
+          app.kubernetes.io/managed-by: awx-operator
+          app.kubernetes.io/name: awx
+          app.kubernetes.io/part-of: awx
+        name: awx-nodeport
+        namespace: awx
+      spec:
+        type: NodePort
+        ports:
+          - port: 80
+            nodePort: 30080
+            targetPort: 8052
+            name: http
+        selector:
+            app.kubernetes.io/component: awx
+            app.kubernetes.io/managed-by: awx-operator
+            app.kubernetes.io/name: awx
+
+

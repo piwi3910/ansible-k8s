@@ -1,0 +1,19 @@
+apiVersion: projectcalico.org/v3
+kind: BGPConfiguration
+metadata:
+  name: default
+spec:
+  logSeverityScreen: Info
+  nodeToNodeMeshEnabled: true
+  asNumber: 65000
+
+{% for host in groups['ah_lb'] %}
+---
+apiVersion: projectcalico.org/v3
+kind: BGPPeer
+metadata:
+  name: "{{ host }}"
+spec:
+  peerIP: {{ hostvars[host]['ansible_host'] }}
+  asNumber: 65000
+{% endfor %}

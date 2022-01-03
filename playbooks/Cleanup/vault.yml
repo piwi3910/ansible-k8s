@@ -1,0 +1,31 @@
+---
+- hosts: ah_masters[0]
+  become: no
+  gather_facts: yes
+  tasks:
+    - name: add vault chart repo
+      kubernetes.core.helm_repository:
+        name: hashicorp
+        repo_url: "https://helm.releases.hashicorp.com"
+
+    - name: Create vault namespace
+      kubernetes.core.k8s:
+        name: vault
+        api_version: v1
+        kind: namespace
+        state: present
+
+    - name: copy over values file
+      template:
+        src: "vault_helm_values.yml.j2"
+        dest: "/tmp/vault_helm_values.yml"
+
+    - name: deploy vault
+      kubernetes.core.helm:
+        name: vault
+        chart_ref: hashicorp/vault
+        release_namespace: vault
+        wait: True
+        values_files:
+          - /tmp/vault_helm_values.yml
+

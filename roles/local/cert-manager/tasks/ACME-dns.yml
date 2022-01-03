@@ -1,0 +1,14 @@
+- name: copy over template
+  template:
+    src: ACME-dns.yml.j2
+    dest: /tmp/ACME-dns.yml
+
+- name: create ACME certs with dns provider
+  kubernetes.core.k8s:
+    state: present
+    src: /tmp/ACME-dns.yml
+
+- name: cleanup files
+  file:
+    name: /tmp/ACME-dns.yml
+    state: absent

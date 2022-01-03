@@ -1,0 +1,30 @@
+---
+#Package versions
+
+
+
+
+#Chart versions
+
+
+
+
+
+#Image versions
+image_list:
+  - { 'name': 'cert-manager-controller' , 'tag': 'v1.6.1' , 'registry': 'quay.io/jetstack' }
+  - { 'name': 'longhorn-engine' , 'tag': 'v1.2.2' , 'registry': 'longhornio' }
+  - { 'name': 'longhorn-manager' , 'tag': 'v1.2.2' , 'registry': 'longhornio' }
+  - { 'name': 'longhorn-ui' , 'tag': 'v1.2.2' , 'registry': 'longhornio' }
+  - { 'name': 'longhorn-instance-manager' , 'tag': 'v1_20210731' , 'registry': 'longhornio' }
+  - { 'name': 'longhorn-share-manager' , 'tag': 'v1_20210914' , 'registry': 'longhornio' }
+  - { 'name': 'backing-image-manager' , 'tag': 'v2_20210820' , 'registry': 'longhornio' }
+  - { 'name': 'csi-attacher' , 'tag': 'v3.2.1' , 'registry': 'k8s.gcr.io/sig-storage' }
+  - { 'name': 'csi-provisioner' , 'tag': 'v2.1.2' , 'registry': 'k8s.gcr.io/sig-storage' }
+  - { 'name': 'csi-node-driver-registrar' , 'tag': 'v2.3.0' , 'registry': 'k8s.gcr.io/sig-storage' }
+  - { 'name': 'csi-resizer' , 'tag': 'v1.2.0' , 'registry': 'k8s.gcr.io/sig-storage' }
+  - { 'name': 'csi-snapshotter' , 'tag': 'v3.0.3' , 'registry': 'k8s.gcr.io/sig-storage' }
+
+
+
+

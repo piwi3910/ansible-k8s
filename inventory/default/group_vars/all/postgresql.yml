@@ -1,0 +1,3 @@
+posgresql_username: "postgres"
+postgresql_password: "S0m3P455W0rD"
+postgresql_PV_size_GB: "10Gi"

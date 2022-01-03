@@ -1,0 +1,14 @@
+- name: copy over template
+  template:
+    src: ACME.yml.j2
+    dest: /tmp/ACME.yml
+
+- name: create ACME certs
+  kubernetes.core.k8s:
+    state: present
+    src: /tmp/ACME.yml
+
+- name: cleanup files
+  file:
+    name: /tmp/ACME.yml
+    state: absent

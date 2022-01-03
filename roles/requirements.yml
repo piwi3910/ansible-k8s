@@ -1,0 +1,7 @@
+- src: aeriscloud.disk
+  name: disk
+  version: v2.6.2
+
+- src: ansible-thoteam.nexus3-oss
+  name: nexus
+  version: v2.4.15

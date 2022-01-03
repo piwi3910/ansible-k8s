@@ -1,0 +1,23 @@
+---
+global:
+  enabled: true
+
+injector:
+  enabled: true
+  replicas: 3
+  leaderElector:
+    enabled: true
+
+ha:
+  enabled: true
+  replicas: 5
+  config: |
+    storage "consul" {
+      path = "vault"
+      address = "consul-server.consul.svc.kubernetes.local:8500"
+    }
+
+ui:
+  enabled: true
+  serviceType: NodePort
+  serviceNodePort: 30600

@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  become: yes
+  gather_facts: yes
+  pre_tasks:
+    - name: install prereq
+      pip:
+        name: docker
+  tasks:
+    - name: login to internal docker repo
+      community.docker.docker_login:
+        registry_url: "{{ internal_docker_repo_url }}"
+        username: "{{ internal_docker_repo_username }}"
+        password: "{{ internal_docker_repo_password }}"
+
+    - name: pull images and push in internal repo
+      community.docker.docker_image:
+        name: "{{ item.registry }}/{{ item.name }}:{{ item.tag }}"
+        repository: "{{ internal_docker_repo_url}}/{{ item.name }}:{{ item.tag }}"
+        source: pull
+        push: yes
+      loop: "{{ image_list }}"
+

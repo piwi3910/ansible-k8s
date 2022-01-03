@@ -10,7 +10,8 @@
         name:
           - git
           - jq
-          - nfs-utils
+          - nfs-client
+          - nfs-common
           - iscsi-initiator-utils
         state: latest
 

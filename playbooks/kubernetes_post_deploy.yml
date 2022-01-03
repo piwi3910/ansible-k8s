@@ -25,6 +25,7 @@
       ansible.builtin.shell:
         cmd: |
             echo "InitiatorName=$(/sbin/iscsi-iname)" > /etc/iscsi/initiatorname.iscsi
+        creates: /etc/iscsi/initiatorname.iscsi
 
     - name: set open-iscsi to start on boot and start service
       ansible.builtin.service:

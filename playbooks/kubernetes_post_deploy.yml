@@ -6,7 +6,7 @@
     - helm
   pre_tasks:
     - name: install prerequirements
-      ansible.builtin.dnf:
+      ansible.builtin.package:
         name:
           - git
           - jq
@@ -31,7 +31,7 @@
         state: started
         enabled: yes
 
-- hosts: ah_masters[0]
+- hosts: k8s_masters[0]
   become: no
   gather_facts: yes
   roles:

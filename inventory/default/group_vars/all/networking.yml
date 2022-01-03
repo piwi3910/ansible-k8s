@@ -1,8 +1,5 @@
-domain_name: "watteel.lan"
+domain_name: "k8s.watteel.lan"
 network_dns:
   - 192.168.0.4
   - 192.168.0.36
-network_gw: "192.168.101.1"
-network_mask: "255.255.255.0"
-haproxy_vip: "192.168.101.10"
-nginx_ingress_lb: "192.168.101.20"
+

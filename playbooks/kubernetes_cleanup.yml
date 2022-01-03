@@ -1,0 +1,11 @@
+---
+- hosts: kubernetes
+  gather_facts: yes
+  become: yes
+  tasks:
+    - name: cleanup existing kubeadm deployments
+      ansible.builtin.shell:
+        cmd: |
+          kubeadm reset --force
+
+

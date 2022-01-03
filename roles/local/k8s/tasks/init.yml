@@ -25,9 +25,9 @@
     state: directory
     mode: 0755
 
-- name: "create .kube directory for {{ template_user }} user"
+- name: "create .kube directory for {{ ansible_ssh_user }} user"
   become: yes
-  become_user: "{{ template_user }}"
+  become_user: "{{ ansible_ssh_user }}"
   file:
     path: $HOME/.kube
     state: directory
@@ -41,20 +41,13 @@
     owner: kube
     mode: 0600
 
-- name: "copies admin.conf to {{ template_user }} kube config"
+- name: "copies admin.conf to {{ ansible_ssh_user }} kube config"
   copy:
     src: /etc/kubernetes/admin.conf
-    dest: "/home/{{ template_user }}/.kube/config"
+    dest: "/home/{{ ansible_ssh_user }}/.kube/config"
     remote_src: yes
-    owner: "{{ template_user }}"
+    owner: "{{ ansible_ssh_user }}"
     mode: 0600
-
-#- name: install Pod network
-#  become: yes
-#  become_user: kube
-#  shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
-#  args:
-#    chdir: $HOME
 
 - name: register discovery-token-ca-cert-hash
   shell: kubeadm token create  --print-join-command | awk  -F" " '{print $7}'

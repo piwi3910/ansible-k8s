@@ -43,14 +43,9 @@
          sudo swapoff -a
          sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 
-- name: disable selinux
-  shell: |
-          sudo setenforce 0
-          sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+- name: be sure ufw is disabled and stopped
+  systemd:
+    name: ufw
+    enabled: no
+    state: stopped
 
-- name: be sure firewalld is disabled
-  systemd: name=firewalld enabled=no
-
-- name: be sure firewalld is stopped
-  systemd: name=firewalld state=stopped
-  ignore_errors: yes

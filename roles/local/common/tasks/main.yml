@@ -31,7 +31,7 @@
 - name: set hostnames
   ansible.builtin.shell:
     cmd: |
-      hostnamectl set-hostname "{{ ansible_hostname }}"
+      hostnamectl set-hostname "{{ ansible_host }}"
 
 - name: Update the /etc/hosts file with node name
   tags: etchostsupdate

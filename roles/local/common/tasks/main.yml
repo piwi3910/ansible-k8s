@@ -1,11 +1,11 @@
 ---
 - name: upgrade packages
-  dnf:
+  ansible.builtin.package:
     name: "*"
     state: latest
 
 - name: install pre-requirements
-  dnf:
+  ansible.builtin.package:
     name:
       - unzip
       - rng-tools

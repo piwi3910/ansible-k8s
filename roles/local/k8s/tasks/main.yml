@@ -96,9 +96,9 @@
 - name: install Kubernetes packages and prereq
   ansible.builtin.apt:
     name:
-      - kubelet
-      - kubeadm
-      - kubectl
+      - "kubelet-{{ version }}"
+      - "kubeadm-{{ version }}"
+      - "kubectl-{{ version }}"
     state: present
     update_cache: yes
 

@@ -31,7 +31,7 @@
 - name: set hostnames
   ansible.builtin.shell:
     cmd: |
-      hostnamectl set-hostname "{{ inventory_hostname_short }}"
+      hostnamectl set-hostname "{{ inventory_hostname_short }}.{{ domain_name }}"
 
 - name: Update the /etc/hosts file with node name
   tags: etchostsupdate

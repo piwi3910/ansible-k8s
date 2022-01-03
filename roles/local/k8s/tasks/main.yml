@@ -4,7 +4,7 @@
     state: present
     name:
       - ca-certificates
-      - gnugp
+      - gpg
       - lsb-release
       - curl
       - apt-transport-https

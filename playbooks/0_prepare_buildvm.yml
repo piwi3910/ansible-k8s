@@ -2,6 +2,7 @@
 
 - hosts: localhost
   connection: local
+  become: yes
   vars:
     force_purge: false
     roles_installation_dir: roles/public

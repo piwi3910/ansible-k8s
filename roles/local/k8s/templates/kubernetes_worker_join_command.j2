@@ -1,2 +1,2 @@
-kubeadm join {{ hostvars[groups['ah_lb'][0]]['haproxy_vip'] }}:6443 --token {{ hostvars[groups['ah_masters'][0]]['kubernetes_join_token'].stdout }} --discovery-token-ca-cert-hash {{ hostvars[groups['ah_masters'][0]]['kubernetes_discovery_token'].stdout }}
+kubeadm join {{ kubernetes_loadbalancer }}:6443 --token {{ hostvars[groups['k8s_masters'][0]]['kubernetes_join_token'].stdout }} --discovery-token-ca-cert-hash {{ hostvars[groups['k8s_masters'][0]]['kubernetes_discovery_token'].stdout }}
 touch cluster_initialized.txt

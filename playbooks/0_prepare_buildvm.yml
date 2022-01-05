@@ -47,8 +47,8 @@
         path: "../config/known_hosts"
         state: touch
 
-    - name: disable and stop ufw
-      systemd:
-        name: ufw
-        state: stopped
-        enabled: no
+#    - name: disable and stop ufw
+#      systemd:
+#        name: ufw
+#        state: stopped
+#        enabled: no

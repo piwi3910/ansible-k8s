@@ -1,0 +1,9 @@
+---
+- hosts: kubernetes[0]
+  gather_facts: yes
+  become: yes
+  tasks:
+    - name: register discovery-token-ca-cert-hash
+      shell:
+        cmd: kubeadm token create --print-join-command | awk -F" " '{print $7}'
+      register: kubernetes_discovery_token

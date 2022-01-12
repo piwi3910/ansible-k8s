@@ -47,8 +47,9 @@
         path: "../config/known_hosts"
         state: touch
 
-    - name: disable and stop ufw
-      systemd:
-        name: ufw
-        state: stopped
-        enabled: no
+# no firewall on raspbian
+#    - name: disable and stop ufw
+#      systemd:
+#        name: ufw
+#        state: stopped
+#        enabled: no

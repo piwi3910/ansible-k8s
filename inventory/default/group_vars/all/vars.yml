@@ -1,6 +1,6 @@
 ---
 #special Conditionals and vars
-ansible_ssh_user: pi
+ansible_ssh_user: ubuntu
 ansible_python_interpreter: /bin/python3
 local_user: "{{ lookup('env','USER') }}"
 

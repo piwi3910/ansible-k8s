@@ -48,9 +48,9 @@
          sudo swapoff -a
          sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 
-#- name: be sure ufw is disabled and stopped
-#  systemd:
-#    name: ufw
-#    enabled: no
-#    state: stopped
+- name: be sure ufw is disabled and stopped
+  systemd:
+    name: ufw
+    enabled: no
+    state: stopped
 

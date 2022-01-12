@@ -8,7 +8,7 @@
       - lsb-release
       - curl
       - apt-transport-https
-      - setfacl
+      - acl
     update_cache: yes
 
 - name: add Docker GPG key

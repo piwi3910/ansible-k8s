@@ -4,7 +4,7 @@ global_defs {
 
 vrrp_instance 41 {
     state "{{ keepalived_state }}"
-    interface ens192
+    interface eth0
     virtual_router_id 41
     priority "{{ keepalived_priority }}"
     advert_int 1

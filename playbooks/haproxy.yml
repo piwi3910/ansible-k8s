@@ -1,6 +1,5 @@
----
-- hosts: all
+- hosts: ha_proxy
   gather_facts: yes
   become: yes
   roles:
-    - common
+    - haproxy

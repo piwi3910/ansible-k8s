@@ -8,7 +8,7 @@
   file: dest=/tmp/kubernetes_master_join_command mode=a+x
 
 - name: join masters to bootstrap node
-  throttle: 1
+#  throttle: 1
   shell:
     cmd: /tmp/kubernetes_master_join_command
   args:

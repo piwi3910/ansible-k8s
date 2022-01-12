@@ -8,4 +8,4 @@ pip3 install --upgrade pip
 pip3 install -r requirements.txt
 
 # Generate an SSH key to connect to ansible slaves
-ssh-keygen -t rsa -f /home/pi/.ssh/id_rsa -q -P ""
+ssh-keygen -t rsa -f /home/ubuntu/.ssh/id_rsa -q -P ""

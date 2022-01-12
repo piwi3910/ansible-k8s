@@ -50,12 +50,14 @@
     mode: 0600
 
 - name: register discovery-token-ca-cert-hash
-  shell: kubeadm token create  --print-join-command | awk  -F" " '{print $7}'
+  shell: |
+    kubeadm token create  --print-join-command | awk  -F" " '{print $7}'
   register: kubernetes_discovery_token
   until: kubernetes_discovery_token.stdout != ""
   retries: 5
   delay: 10
 
 - name: register join token
-  shell: kubeadm token create  --print-join-command | awk  -F" " '{print $5}'
+  shell: |
+    kubeadm token create  --print-join-command | awk  -F" " '{print $5}'
   register: kubernetes_join_token

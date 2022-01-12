@@ -51,7 +51,7 @@
 
 - name: register discovery-token-ca-cert-hash
   shell:
-    cmd: kubeadm token create  --print-join-command | awk  -F" " '{print $7}'
+    cmd: kubeadm token create  --print-join-command
   register: kubernetes_discovery_token
 
 - name: register join token

@@ -1,0 +1,42 @@
+---
+- name: install haproxy and keepalived
+  ansible.builtin.apt:
+    name:
+      - haproxy
+      - keepalived
+    state: latest
+
+- name: copy over keepalived template
+  template:
+    dest: /etc/keepalived/keepalived.conf
+    src: keepalived.conf.j2
+
+- name: set net.ipv4.ip_nonlocal_bind
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_nonlocal_bind
+    value: "1"
+    state: present
+    reload: yes
+    sysctl_set: yes
+
+- name: keepalived enabled and started
+  ansible.builtin.systemd:
+    state: restarted
+    name: keepalived
+    enabled: yes
+
+- name: copy over haproxy config
+  template:
+    dest: /etc/haproxy/haproxy.cfg
+    src: haproxy.cfg.j2
+
+- name: Allow the haproxy binary to bind to ports 80 and 443
+  shell:
+    cmd: setcap cap_net_bind_service=+ep /usr/sbin/haproxy
+
+- name: haproxy enabled and started
+  ansible.builtin.systemd:
+    state: restarted
+    name: haproxy
+    enabled: yes
+

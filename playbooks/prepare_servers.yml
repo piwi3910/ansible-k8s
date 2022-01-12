@@ -3,4 +3,10 @@
   gather_facts: yes
   become: yes
   roles:
-    - role: common
+    - common
+
+- hosts: k8s_masters
+  gather_facts: yes
+  become: yes
+  roles:
+    - haproxy

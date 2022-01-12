@@ -1,0 +1,35 @@
+global
+    daemon
+    log 127.0.0.1 local0 debug
+    maxconn 50000
+    nbproc 1
+    chroot /var/lib/haproxy
+
+defaults
+    mode http
+    timeout connect 5s
+    timeout client 25s
+    timeout server 25s
+    timeout queue 10s
+
+frontend kubernetes
+        bind {{ kubernetes_loadbalancer }}:6443
+        option tcplog
+        mode tcp
+        default_backend kubernetes-master-nodes
+
+frontend stats
+    bind *:8404
+    stats enable
+    stats uri /stats
+    stats refresh 10s
+    stats admin if TRUE
+    stats auth {{ haproxy_stats_user }}:{{ haproxy_stats_password }}
+
+backend kubernetes-master-nodes
+        mode tcp
+        balance roundrobin
+        option tcp-check
+        {% for host in groups['k8s_masters'] %}
+server {{ host }} {{ hostvars[host]['ansible_host'] }}:6443 check fall 3 rise 2
+        {% endfor %}

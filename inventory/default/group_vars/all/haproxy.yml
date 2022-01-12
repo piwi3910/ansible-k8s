@@ -1,0 +1,6 @@
+#HAproxy vars
+haproxy_stats_user: "admin"
+haproxy_stats_password: "haproxy"
+
+#Keepalived vars
+keepalived_pass: "S0M3P455"

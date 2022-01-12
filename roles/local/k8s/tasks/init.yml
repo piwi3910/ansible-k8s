@@ -50,11 +50,15 @@
     mode: 0600
 
 - name: register discovery-token-ca-cert-hash
+  become: yes
+  become_user: kube
   shell:
     cmd: kubeadm token create --print-join-command | awk -F" " '{print $7}'
   register: kubernetes_discovery_token
 
 - name: register join token
+  become: yes
+  become_user: kube
   shell:
     cmd: kubeadm token create --print-join-command | awk -F" " '{print $5}'
   register: kubernetes_join_token

@@ -13,7 +13,7 @@ defaults
     timeout queue 10s
 
 frontend kubernetes
-        bind {{ kubernetes_loadbalancer }}:6443
+        bind {{ kubernetes_loadbalancer }}:7443
         option tcplog
         mode tcp
         default_backend kubernetes-master-nodes

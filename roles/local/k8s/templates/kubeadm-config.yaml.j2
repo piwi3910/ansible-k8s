@@ -9,7 +9,7 @@ clusterName: kubernetes
 apiServer:
   certSANs:
   - "{{ kubernetes_loadbalancer }}"
-controlPlaneEndpoint: "{{ kubernetes_loadbalancer }}:6443"
+controlPlaneEndpoint: "{{ kubernetes_loadbalancer }}:7443"
 networking:
   dnsDomain: cluster.local
   podSubnet: {{ kubernetes_pod_network }}

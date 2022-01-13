@@ -4,6 +4,9 @@ ingress:
     enabled: true
     hosts:
     - host: heimdall.{{ public_dns_name }}
+      paths:
+      - path: /
+        pathType: Prefix
     tls:
       - secretName: ingress-tls-secret
         hosts:

@@ -9,24 +9,25 @@
     src: "rancher_helm_values.yml.j2"
     dest: "/tmp/rancher_helm_values.yml"
 
-- name: workaround for rancher chart bug with kubernetes 1.23
-  block:
-    - name: download stable chart
-      shell:
-        cmd: |
-          rm -rf /tmp/rancher
-          helm pull rancher-stable/rancher --destination /tmp/ --untar --untardir /tmp/ --version 2.6.2
-
-    - name: replace kubernetes version in chart
-      ansible.builtin.lineinfile:
-        path: /tmp/rancher/Chart.yaml
-        search_string: "kubeVersion"
-        line: 'kubeVersion: < v1.24.0-0'
+#Not needed as running supported kubernetes
+#- name: workaround for rancher chart bug with kubernetes 1.23
+#  block:
+#    - name: download stable chart
+#      shell:
+#        cmd: |
+#          rm -rf /tmp/rancher
+#          helm pull rancher-stable/rancher --destination /tmp/ --untar --untardir /tmp/ --version 2.6.2
+#
+#    - name: replace kubernetes version in chart
+#      ansible.builtin.lineinfile:
+#        path: /tmp/rancher/Chart.yaml
+#        search_string: "kubeVersion"
+#        line: 'kubeVersion: < v1.24.0-0'
 
 - name: deploy rancher
   kubernetes.core.helm:
     name: rancher
-    chart_ref: /tmp/rancher
+    chart_ref: rancher-stable/rancher
     release_namespace: cattle-system
     create_namespace: yes
     wait: True

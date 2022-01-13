@@ -32,12 +32,10 @@
         state: absent
   when: not helm.stat.exists
 
-### Commented for now, till i can check how to get it to work on arm64
-
-#- name: Install Helm Diff
-#  kubernetes.core.helm_plugin:
-#    state: present
-#    plugin_path: https://github.com/databus23/helm-diff
+- name: Install Helm Diff
+  kubernetes.core.helm_plugin:
+    state: present
+    plugin_path: https://github.com/databus23/helm-diff
 
 
 

@@ -1,6 +1,6 @@
 ingress:
   tls:
-    source: rancher
+    source: secret
 hostname: "rancher.{{ domain_name }}"
-replicas: 3
-privateCA: true
+replicas: -1
+

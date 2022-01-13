@@ -3,4 +3,4 @@
   become_user: kube
   kubernetes.core.k8s:
     state: present
-    template: '/templates/manifest.yml.j2'
+    template: "manifest.yml.j2"

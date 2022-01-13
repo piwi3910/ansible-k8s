@@ -2,7 +2,8 @@
 ingress:
   main:
     enabled: true
-    host: heimdall.{{ public_dns_name }}
+    hosts:
+      host: heimdall.{{ public_dns_name }}
     tls:
       - secretName: ingress-tls-secret
         hosts:

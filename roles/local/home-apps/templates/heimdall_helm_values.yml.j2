@@ -3,7 +3,7 @@ ingress:
   main:
     enabled: true
     hosts:
-      host: heimdall.{{ public_dns_name }}
+    - host: heimdall.{{ public_dns_name }}
     tls:
       - secretName: ingress-tls-secret
         hosts:
@@ -13,3 +13,6 @@ persistence:
   config:
     enabled: true
     mountPath: /config
+
+env:
+  TZ: {{ timezone }}

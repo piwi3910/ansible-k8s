@@ -11,6 +11,8 @@ nginx_ingress_lb: "192.168.78.50"
 public_cert: "{{ vault_public_cert }}"
 public_cert_key: "{{ vault_public_cert_key }}"
 
+timezone: "Asia/Dubai"
+
 
 
 

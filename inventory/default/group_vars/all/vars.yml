@@ -5,7 +5,8 @@ ansible_python_interpreter: /bin/python3
 local_user: "{{ lookup('env','USER') }}"
 
 #metallb vars
-metallb_ip_range: "192.168.101.20-192.168.101.49"
+metallb_ip_range: "192.168.78.50-192.168.78.200"
+nginx_ingress_lb: "192.168.78.50"
 
 
 

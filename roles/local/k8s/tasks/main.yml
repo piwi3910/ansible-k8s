@@ -11,16 +11,6 @@
       - acl
     update_cache: yes
 
-- name: add Docker GPG key
-  ansible.builtin.shell:
-    cmd: |
-      curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-    creates: /usr/share/keyrings/docker-archive-keyring.gpg
-
-- name: copy over containerd modules template
-  template:
-    src: containerd.conf.j2
-    dest: /etc/modules-load.d/containerd.conf
 
 - name: modprobe modules
   block:
@@ -41,46 +31,69 @@
         name: net.ipv4.ip_forward
         value: "1"
         state: present
-        reload: yes
         sysctl_set: yes
+      notify: Reload sysctl
 
     - name: set net.bridge.bridge-nf-call-iptables
       ansible.posix.sysctl:
         name: net.bridge.bridge-nf-call-iptables
         value: "1"
         state: present
-        reload: yes
         sysctl_set: yes
+      notify: Reload sysctl
 
     - name: set net.bridge.bridge-nf-call-ip6tables
       ansible.posix.sysctl:
         name: net.bridge.bridge-nf-call-iptables
         value: "1"
         state: present
-        reload: yes
         sysctl_set: yes
+      notify: Reload sysctl
 
-- name: set containerd repo
-  ansible.builtin.shell:
-    cmd: |
-      echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    creates: /etc/apt/sources.list.d/docker.list
+    - name: Flush handlers
+      meta: flush_handlers
 
-- name: install containerd
-  ansible.builtin.apt:
-    name: containerd
-    state: present
-    update_cache: yes
+- name: Containerd installation and configuration
+  block:
+    - name: set containerd repo
+      ansible.builtin.shell:
+        cmd: |
+          echo \
+          "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+          $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        creates: /etc/apt/sources.list.d/docker.list
 
-- name: configure containerd
-  ansible.builtin.shell:
-    cmd: |
-         sudo mkdir -p /etc/containerd
-         sudo containerd config default | sudo tee /etc/containerd/config.toml
-         sudo systemctl restart containerd
-    creates: /etc/containerd/config.toml
+    - name: add Docker GPG key
+      ansible.builtin.shell:
+        cmd: |
+          curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+        creates: /usr/share/keyrings/docker-archive-keyring.gpg
+
+    - name: install containerd
+      ansible.builtin.apt:
+        name: containerd
+        state: present
+        update_cache: yes
+
+    - name: copy over containerd modules template
+      template:
+        src: containerd.conf.j2
+        dest: /etc/modules-load.d/containerd.conf
+
+    - name: create containerd config directory
+      file:
+        path: /etc/containerd
+        state: directory
+        mode: 0755
+
+    - name: configure containerd
+      template:
+        src: containerd.toml.j2
+        dest: /etc/containerd/config.toml
+      notify: Restart containerd
+
+    - name: Flush handlers
+      meta: flush_handlers
 
 - name: add Kubernetes GPG key
   ansible.builtin.shell:
@@ -129,7 +142,10 @@
     - ~/.ssh/id_rsa.pub
 
 - name: Enable Kubelet
-  systemd: name=kubelet enabled=yes
+  systemd:
+    name: kubelet
+    enabled: yes
+    state: started
 
 - include_tasks: init.yml
   when: inventory_hostname in groups['k8s_masters'][0]

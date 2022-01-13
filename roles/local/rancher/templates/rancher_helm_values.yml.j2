@@ -1,6 +1,6 @@
 ingress:
   tls:
     source: rancher
-hostname: rancher.ah.watteel.lan
+hostname: "rancher.{{ domain_name }}"
 replicas: 3
 privateCA: true

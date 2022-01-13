@@ -14,4 +14,11 @@
         path: $HOME/cluster_initialized.txt
         state: absent
 
+    - name: remove old cni config
+      become: yes
+      file:
+        path: /etc/cni/net.d/*
+        state: absent
+
+
 

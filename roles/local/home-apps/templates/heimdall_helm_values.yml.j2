@@ -1,0 +1,14 @@
+---
+ingress:
+  main:
+    enabled: true
+    host: heimdall.{{ public_dns_name }}
+    tls:
+      - secretName: tls-secret
+        hosts:
+          - heimdall.{{ public_dns_name }}
+
+persistence:
+  config:
+    enabled: true
+    mountPath: /config

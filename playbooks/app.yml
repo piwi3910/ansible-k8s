@@ -1,0 +1,7 @@
+- hosts: k8s_masters[0]
+  become: no
+  gather_facts: yes
+  roles:
+    - home-apps
+
+

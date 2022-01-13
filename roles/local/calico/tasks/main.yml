@@ -1,63 +1,6 @@
----
-- name: add projectcalico chart repo
-  kubernetes.core.helm_repository:
-    name: projectcalico
-    repo_url: "https://docs.projectcalico.org/charts"
-
-- name: copy over values file
-  template:
-    src: "calico_helm_values.yml.j2"
-    dest: "/tmp/calico_helm_values.yml"
-
-- name: deploy calico
-  kubernetes.core.helm:
-    name: calico
-    chart_ref: projectcalico/tigera-operator
-    release_namespace: calico-system
-    create_namespace: true
-    wait: True
-    update_repo_cache: yes
-    values_files:
-      - /tmp/calico_helm_values.yml
-
-- name: cleanup files
-  file:
-    name: calico_helm_values.yml
-    state: absent
-
-#- name: calico BGP config
-#  become: yes
-#  block:
-#    - name: download calicoctl
-#      get_url:
-#        url: "https://github.com/projectcalico/calicoctl/releases/download/v{{ calicoctl_version }}/calicoctl"
-#        dest: /usr/local/bin/calicoctl
-#
-#    - name: Changing perm of /usr/local/bin/calicoctl , adding "+x"
-#      file: dest=/usr/local/bin/calicoctl mode=a+x
-#
-#    - name: create calicoctl config dir
-#      file:
-#        path: /etc/calico
-#        state: directory
-#
-#    - name: copy over calicoctl template
-#      template:
-#        dest: /etc/calico/calicoctl.cfg
-#        src: calicoctl.cfg.j2
-#
-#    - name: copy over calico bgp template
-#      template:
-#        dest: /tmp/calico-bgpconfiguration.yaml
-#        src: calico-bgpconfiguration.yaml.j2
-#
-#    - name: apply bgp config to calico
-#      shell:
-#        cmd: /usr/local/bin/calicoctl apply -f /tmp/calico-bgpconfiguration.yaml
-#
-#    - name: cleanup
-#      file:
-#        path: /tmp/calico-bgpconfiguration.yaml
-#        state: absent
-
-
+- name: deploy calico via manifest
+  become: yes
+  become_user: kube
+  kubernetes.core.k8s:
+    state: present
+    template: '/templates/manifest.yml.j2'

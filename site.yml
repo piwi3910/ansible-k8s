@@ -1,5 +1,6 @@
 ---
 - import_playbook: playbooks/prepare_servers.yml
+- import_playbook: playbooks/haproxy.yml
 - import_playbook: playbooks/kubernetes.yml
 - import_playbook: playbooks/kubernetes_post_deploy.yml
 

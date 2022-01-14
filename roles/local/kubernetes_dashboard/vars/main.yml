@@ -1,4 +1,4 @@
-kubernetes_dashboard_namespace: kube-system
+role_namespace: kube-system
 tls_secret: "tls-ingress"
 role_repo_url: "https://kubernetes.github.io/dashboard/"
 role_chart_name: "kubernetes-dashboard/kubernetes-dashboard"

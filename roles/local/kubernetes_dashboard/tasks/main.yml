@@ -2,11 +2,11 @@
 - name: add "{{ role_name }}" chart repo
   kubernetes.core.helm_repository:
     name: "{{ role_name }}"
-    repo_url: ""
+    repo_url: "{{ role_repo_url }}"
 
 - name: Create {{ role_name }} namespace
   kubernetes.core.k8s:
-    name: "{{ kubernetes_dashboard_namespace }}"
+    name: "{{ role_namespace }}"
     api_version: v1
     kind: namespace
     state: present
@@ -27,8 +27,8 @@
   kubernetes.core.helm:
     name: "{{ role_name}}"
     chart_ref: "{{ role_chart_name }}"
-    release_namespace: "{{ kubernetes_dashboard_namespace }}"
-    create_namespace: yes
+    release_namespace: "{{ role_namespace }}"
+    create_namespace: no
     wait: True
     update_repo_cache: yes
 

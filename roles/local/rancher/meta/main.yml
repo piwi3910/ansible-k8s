@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: helm
+  role_name: rancher
   author: Pascal Watteel
   description: This role will deploy rancher on a kubernetes cluster
   license: GPLv2

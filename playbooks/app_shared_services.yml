@@ -4,4 +4,4 @@
   roles:
     - { role: rancher, when: "deploy_rancher" }
     - { role: kubernetes-dashboard, when: "deploy_kubernetes_dashboard" }
-    - postgresql
+#    - postgresql

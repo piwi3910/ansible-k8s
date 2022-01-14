@@ -31,10 +31,10 @@
     create_namespace: no
     wait: True
     values_files:
-      - /tmp/{{ role_name }}_helm_values.yml
+      - "/tmp/{{ role_name }}_helm_values.yml"
 
 - name: cleanup files
   file:
     name:
-      - /tmp/{{ role_name }}_helm_values.yml
+      - "/tmp/{{ role_name }}_helm_values.yml"
     state: absent

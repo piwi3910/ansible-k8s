@@ -3,4 +3,4 @@
 #### only the applications that are optional are in the list below
 
 deploy_rancher: true
-deploy_kubernetes-dashboard: true
+deploy_kubernetes_dashboard: true

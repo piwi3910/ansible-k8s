@@ -42,4 +42,4 @@
     - metallb
     - cert-manager
     - nginx
-    - rancher
+    - { role: rancher, when: "deploy_rancher" }

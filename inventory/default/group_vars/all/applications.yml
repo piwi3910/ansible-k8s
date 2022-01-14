@@ -1,0 +1,6 @@
+---
+#### Set the application to true that you want to have installed
+#### only the applications that are optional are in the list below
+
+deploy_rancher: true
+

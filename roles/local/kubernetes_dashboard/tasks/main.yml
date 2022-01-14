@@ -1,17 +1,17 @@
 ---
-- name: add kubernetes-dashboard chart repo
+- name: add "{{ role_name }}" chart repo
   kubernetes.core.helm_repository:
-    name: kubernetes-dashboard
-    repo_url: "https://kubernetes.github.io/dashboard/"
+    name: "{{ role_name }}"
+    repo_url: ""
 
-- name: Create kubernetes-dashboard namespace
+- name: Create {{ role_name }} namespace
   kubernetes.core.k8s:
     name: "{{ kubernetes_dashboard_namespace }}"
     api_version: v1
     kind: namespace
     state: present
 
-- name: create tls secret for kubernetes-dashboard ingress
+- name: create tls secret for "{{ role_name }}" ingress
   become: yes
   become_user: kube
   kubernetes.core.k8s:
@@ -20,13 +20,13 @@
 
 - name: copy over values file
   template:
-    src: "kubernetes_dashboard_values.yaml.j2"
-    dest: "/tmp/kubernetes_dashboard_values.yaml"
+    src: "{{ role_name}}_values.yaml.j2"
+    dest: "/tmp/{{ role_name}}_values.yaml"
 
-- name: deploy kubernetes-dashboard
+- name: deploy {{ role_name }}
   kubernetes.core.helm:
-    name: kubernetes-dashboard
-    chart_ref: kubernetes-dashboard/kubernetes-dashboard
+    name: "{{ role_name}}"
+    chart_ref: "{{ role_chart_name }}"
     release_namespace: "{{ kubernetes_dashboard_namespace }}"
     create_namespace: yes
     wait: True
@@ -34,5 +34,5 @@
 
 - name: cleanup files
   file:
-    name: /tmp/kubernetes_dashboard_values.yaml
+    name: "/tmp/{{ role_name }}_values.yaml"
     state: absent

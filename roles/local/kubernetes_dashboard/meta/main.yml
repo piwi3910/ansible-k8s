@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: helm
+  role_name: kubernetes dashboard
   author: Pascal Watteel
   description: This role will deploy the kubernetes dashboard on a kubernetes cluster
   license: GPLv2

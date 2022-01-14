@@ -1,17 +1,17 @@
 ---
-- name: add "{{ role_name }}" chart repo
+- name: add chart repo
   kubernetes.core.helm_repository:
     name: "{{  role_chart_name.split('/')[0] | lower }}"
     repo_url: "{{ role_repo_url }}"
 
-- name: Create {{ role_name }} namespace
+- name: Create namespace
   kubernetes.core.k8s:
     name: "{{ role_namespace }}"
     api_version: v1
     kind: namespace
     state: present
 
-- name: create tls secret for "{{ role_name }}" ingress
+- name: create tls secret for ingress
   become: yes
   become_user: kube
   kubernetes.core.k8s:
@@ -23,7 +23,7 @@
     src: "{{ role_name}}_values.yaml.j2"
     dest: "/tmp/{{ role_name}}_values.yaml"
 
-- name: deploy {{ role_name }}
+- name: deploy
   kubernetes.core.helm:
     name: "{{ role_name}}"
     chart_ref: "{{ role_chart_name }}"

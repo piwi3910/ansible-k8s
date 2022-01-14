@@ -2,4 +2,6 @@
   become: no
   gather_facts: yes
   roles:
+    - { role: rancher, when: "deploy_rancher" }
+    - { role: kubernetes_dashboard, when: "deploy_kubernetes_dashboard" }
     - postgresql

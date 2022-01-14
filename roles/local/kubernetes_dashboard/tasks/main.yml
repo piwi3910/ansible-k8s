@@ -4,11 +4,35 @@
     name: kubernetes-dashboard
     repo_url: "https://kubernetes.github.io/dashboard/"
 
+- name: Create kubernetes-dashboard namespace
+  kubernetes.core.k8s:
+    name: "{{ kubernetes_dashboard_namespace }}"
+    api_version: v1
+    kind: namespace
+    state: present
+
+- name: create tls secret for kubernetes-dashboard ingress
+  become: yes
+  become_user: kube
+  kubernetes.core.k8s:
+    state: present
+    template: "secret.yml.j2"
+
+- name: copy over values file
+  template:
+    src: "kubernetes_dashboard_values.yaml.j2"
+    dest: "/tmp/kubernetes_dashboard_values.yaml"
+
 - name: deploy kubernetes-dashboard
   kubernetes.core.helm:
     name: kubernetes-dashboard
     chart_ref: kubernetes-dashboard/kubernetes-dashboard
-    release_namespace: kube-system
+    release_namespace: "{{ kubernetes_dashboard_namespace }}"
     create_namespace: yes
     wait: True
     update_repo_cache: yes
+
+- name: cleanup files
+  file:
+    name: /tmp/kubernetes_dashboard_values.yaml
+    state: absent

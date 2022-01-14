@@ -1,1 +1,2 @@
-
+kubernetes_dashboard_namespace: kube-system
+tls_secret: "tls-ingress"

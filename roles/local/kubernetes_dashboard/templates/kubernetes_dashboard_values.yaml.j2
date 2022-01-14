@@ -1,0 +1,13 @@
+---
+ingress:
+  enabled: true
+  customPaths:
+    hosts:
+      - "kubernetes-dashboard.{{ public_dns_name }}"
+    tls:
+      - secretName: "{{ tls_secret }}"
+        hosts:
+          - "kubernetes-dashboard.{{ public_dns_name }}"
+
+metric-server:
+  enabled: true

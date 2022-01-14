@@ -56,6 +56,6 @@
 #    state: stopped
 
 - name: import emulation playbook
-  import_playbook: emulation.yml
+  import_tasks: emulation.yml
   when: arch_emulation | bool
 

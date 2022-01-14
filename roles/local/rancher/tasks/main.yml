@@ -26,13 +26,15 @@
 - name: deploy "{{ role_name }}"
   kubernetes.core.helm:
     name: "{{ role_name }}"
-    chart_ref:
+    chart_ref: "{{ role_chart_name }}"
     release_namespace: "{{ role_namespace }}"
     create_namespace: no
     wait: True
-    values_files: "/tmp/{{ role_name }}_helm_values.yml"
+    values_files:
+      - /tmp/{{ role_name }}_helm_values.yml
 
 - name: cleanup files
   file:
-    name: "/tmp/{{ role_name }}_helm_values.yml"
+    name:
+      - /tmp/{{ role_name }}_helm_values.yml
     state: absent

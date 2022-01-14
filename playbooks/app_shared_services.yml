@@ -3,5 +3,5 @@
   gather_facts: yes
   roles:
     - { role: rancher, when: "deploy_rancher" }
-    - { role: kubernetes_dashboard, when: "deploy_kubernetes_dashboard" }
+    - { role: kubernetes-dashboard, when: "deploy_kubernetes-dashboard" }
     - postgresql

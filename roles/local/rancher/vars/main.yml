@@ -1,2 +1,4 @@
-rancher_namespace: "cattle-system"
+role_namespace: "cattle-system"
 tls_secret: "tls-rancher-ingress"
+role_repo_url: "https://releases.rancher.com/server-charts/stable"
+role_chart_name: "rancher-stable/rancher"

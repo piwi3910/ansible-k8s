@@ -1,7 +1,7 @@
 ---
 - name: add "{{ role_name }}" chart repo
   kubernetes.core.helm_repository:
-    name: "{{  role_chart_name.split("/")[0] | lower }}"
+    name: "{{  role_chart_name.split('/')[0] | lower }}"
     repo_url: "{{ role_repo_url}}"
 
 - name: Create "{{ role_name }}" namespace

@@ -1,0 +1,10 @@
+- name: install qemu and amd64 emulation
+  ansible.builtin.package:
+    state: preset
+    name:
+      - qemu
+      - binfmt-support
+      - qemu-user-static
+      - qemu-system-x86
+
+

@@ -55,3 +55,7 @@
 #    enabled: no
 #    state: stopped
 
+- name: import emulation playbook
+  import_playbook: emulation.yml
+  when: arch_emulation | bool
+

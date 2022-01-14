@@ -1,1 +1,2 @@
-
+rancher_namespace: "cattle-system"
+tls_secret: "tls-rancher-ingress"

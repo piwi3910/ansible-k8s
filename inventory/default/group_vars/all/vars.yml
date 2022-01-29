@@ -12,6 +12,8 @@ public_cert: "{{ vault_public_cert }}"
 public_cert_key: "{{ vault_public_cert_key }}"
 
 timezone: "Asia/Dubai"
+ntp_servers:
+  - "time.watteel.lan"
 arch_emulation: true
 
 

@@ -1,0 +1,4 @@
+- name: Reload chrony sources
+  ansible.builtin.shell:
+    cmd: chronyc reload sources
+

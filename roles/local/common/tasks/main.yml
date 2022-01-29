@@ -55,7 +55,26 @@
 #    enabled: no
 #    state: stopped
 
+- name: install chrony
+  ansible.builtin.package:
+    state: present
+    name: chrony
+
+- name: start and enable chrony
+  ansible.builtin.systemd:
+    state: started
+    name: chrony
+    enabled: yes
+
+- name: copy over chrony ntp server template
+  ansible.builtin.template:
+    dest: /etc/chrony/sources.d/local.sources
+    src: local.sources.j2
+  notify: Reload chrony sources
+
 - name: import emulation playbook
   import_tasks: emulation.yml
   when: arch_emulation | bool
+
+
 

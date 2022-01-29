@@ -66,6 +66,13 @@
     name: chrony
     enabled: yes
 
+- name: disable pool
+  ansible.builtin.replace:
+    dest: /etc/chrony/chrony.conf
+    regexp: '^pool'
+    replace: '#pool'
+  notify: Restart chrony
+
 - name: copy over chrony ntp server template
   ansible.builtin.template:
     dest: /etc/chrony/sources.d/local.sources

@@ -2,3 +2,9 @@
   ansible.builtin.shell:
     cmd: chronyc reload sources
 
+- name: Restart chrony
+  ansible.builtin.systemd:
+    name: chrony
+    state: restarted
+
+

@@ -2,17 +2,17 @@
 - block:
     - name: Read in task specific vars
       include_vars:
-        file: vars/heimdall.yml
+        file: heimdall.yml
         name: heimdall
 
     - name: add chart repo
       kubernetes.core.helm_repository:
-        name: "{{  role_chart_name.split('/')[0] | lower }}"
+        name: "{{  heimdall.role_chart_name.split('/')[0] | lower }}"
         repo_url: "{{ role_repo_url }}"
 
     - name: Create namespace
       kubernetes.core.k8s:
-        name: "{{ role_namespace }}"
+        name: "{{ heimdall.role_namespace }}"
         api_version: v1
         kind: namespace
         state: present
@@ -26,19 +26,19 @@
 
     - name: copy over values file
       template:
-        src: "{{ role_name}}_values.yaml.j2"
-        dest: "/tmp/{{ role_name}}_values.yaml"
+        src: "{{ heimdall.role_name}}_values.yaml.j2"
+        dest: "/tmp/{{ heimdall.role_name}}_values.yaml"
 
     - name: deploy
       kubernetes.core.helm:
-        name: "{{ role_name}}"
-        chart_ref: "{{ role_chart_name }}"
-        release_namespace: "{{ role_namespace }}"
+        name: "{{ heimdall.role_name}}"
+        chart_ref: "{{ heimdall.role_chart_name }}"
+        release_namespace: "{{ heimdall.role_namespace }}"
         create_namespace: no
         wait: True
         update_repo_cache: yes
 
     - name: cleanup files
       file:
-        name: "/tmp/{{ role_name }}_values.yaml"
+        name: "/tmp/{{ heimdall.role_name }}_values.yaml"
         state: absent

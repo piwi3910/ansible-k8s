@@ -38,8 +38,8 @@
         wait: True
         update_repo_cache: yes
 
-    - name: cleanup files
-      file:
-        name: "/tmp/{{ item }}_helm_values.yml"
-        state: absent
+#    - name: cleanup files
+#      file:
+#        name: "/tmp/{{ item }}_helm_values.yml"
+#        state: absent
   when: home_apps.heimdall

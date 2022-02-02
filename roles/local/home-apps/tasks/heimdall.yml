@@ -42,4 +42,4 @@
       file:
         name: "/tmp/{{ [item].role_name }}_values.yaml"
         state: absent
-  when: home_apps.item
+  when: home_apps.heimdall

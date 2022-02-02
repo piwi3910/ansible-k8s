@@ -26,7 +26,7 @@
 
     - name: copy over values file
       template:
-        src: "{{ item}}/{{ item }}_helm_values.yml.j2"
+        src: "{{ item }}/{{ item }}_helm_values.yml.j2"
         dest: "/tmp/{{ item }}_helm_values.yml"
 
     - name: deploy
@@ -44,4 +44,4 @@
       file:
         name: "/tmp/{{ item }}_helm_values.yml"
         state: absent
-  when: home_apps.item
+  when: hostvars[inventory_hostname].home_apps[item]

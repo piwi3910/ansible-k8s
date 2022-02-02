@@ -1,5 +1,8 @@
 ---
 - block:
+    - debug:
+        msg: "Starting deploy off {{ item }}"
+
     - name: inlude vars for enabled apps
       include_vars:
         file: "{{ item }}.yml"

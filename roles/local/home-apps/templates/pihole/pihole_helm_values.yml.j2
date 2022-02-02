@@ -21,6 +21,8 @@ persistentVolumeClaim:
   size: "2048Mi"
 
 serviceWeb:
+  https:
+    enabled: false
   annotations:
     metallb.universe.tf/allow-shared-ip: pihole-svc
   type: LoadBalancer

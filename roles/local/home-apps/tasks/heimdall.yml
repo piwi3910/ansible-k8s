@@ -3,11 +3,11 @@
     - name: inlude vars for enabled apps
       include_vars:
         file: "{{ item }}.yml"
-        name: "{{ item }}_vars"
+        name: "{{ item }}"
 
     - name: debug
       debug:
-        msg: "{{ item }}_vars"
+        msg: "{{ hostvars[inventory_hostname][item] }}"
 
     - name: add chart repo
       kubernetes.core.helm_repository:

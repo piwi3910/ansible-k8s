@@ -1,26 +1,38 @@
-- name: add k8s-at-home chart repo
+---
+- name: add chart repo
   kubernetes.core.helm_repository:
-    name: k8s-at-home
-    repo_url: "https://k8s-at-home.com/charts/"
+    name: "{{  role_chart_name.split('/')[0] | lower }}"
+    repo_url: "{{ role_repo_url }}"
 
-- name: install heimdall
-  block:
-    - name: copy over values file
-      template:
-        src: "heimdall_helm_values.yml.j2"
-        dest: "/tmp/heimdall_helm_values.yml"
+- name: Create namespace
+  kubernetes.core.k8s:
+    name: "{{ role_namespace }}"
+    api_version: v1
+    kind: namespace
+    state: present
 
-    - name: deploy heimdall
-      kubernetes.core.helm:
-        name: heimdall
-        chart_ref: k8s-at-home/heimdall
-        release_namespace: home-apps
-        create_namespace: yes
-        wait: True
-        values_files:
-          - /tmp/heimdall_helm_values.yml
+- name: create tls secret for ingress
+  become: yes
+  become_user: kube
+  kubernetes.core.k8s:
+    state: present
+    template: "secret.yml.j2"
 
-    - name: cleanup files
-      file:
-        name: /tmp/heimdall_helm_values.yml
-        state: absent
+- name: copy over values file
+  template:
+    src: "{{ role_name}}_values.yaml.j2"
+    dest: "/tmp/{{ role_name}}_values.yaml"
+
+- name: deploy
+  kubernetes.core.helm:
+    name: "{{ role_name}}"
+    chart_ref: "{{ role_chart_name }}"
+    release_namespace: "{{ role_namespace }}"
+    create_namespace: no
+    wait: True
+    update_repo_cache: yes
+
+- name: cleanup files
+  file:
+    name: "/tmp/{{ role_name }}_values.yaml"
+    state: absent

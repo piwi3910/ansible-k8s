@@ -1,0 +1,4 @@
+role_namespace: "home-apps"
+tls_secret: "tls-ingress"
+role_repo_url: "https://k8s-at-home.com/charts/"
+role_chart_name: "k8s-at-home/heimdall"

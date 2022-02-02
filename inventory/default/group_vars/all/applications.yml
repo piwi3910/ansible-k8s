@@ -11,5 +11,5 @@ deploy_kubernetes_dashboard: true
 
 
 #### Home Apps
-deploy_heimdall: true
-deploy_pi_hole: true
+heimdall.deploy: true
+pi_hole.deploy: true

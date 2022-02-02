@@ -5,6 +5,10 @@
         file: "{{ item }}.yml"
         name: "{{ item }}"
 
+    - name: debug
+      debug:
+        msg: "{{ item }}"
+
     - name: add chart repo
       kubernetes.core.helm_repository:
         name: "{{ [item].role_chart_name.split('/')[0] | lower }}"

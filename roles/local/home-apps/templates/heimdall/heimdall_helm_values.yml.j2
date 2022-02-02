@@ -3,14 +3,14 @@ ingress:
   main:
     enabled: true
     hosts:
-    - host: {{ app_dns_name }}.{{ public_dns_name }}
+    - host: {{ hostvars[inventory_hostname][item].app_dns_name }}.{{ public_dns_name }}
       paths:
       - path: /
         pathType: Prefix
     tls:
-      - secretName: {{ tls_secret }}
+      - secretName: {{ hostvars[inventory_hostname][item].tls_secret }}
         hosts:
-          - {{ app_dns_name }}.{{ public_dns_name }}
+          - {{ hostvars[inventory_hostname][item].app_dns_name }}.{{ public_dns_name }}
 
 persistence:
   config:

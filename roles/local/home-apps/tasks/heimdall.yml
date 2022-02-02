@@ -26,8 +26,8 @@
 
     - name: copy over values file
       template:
-        src: "{{ item}}/{{ item }}_helm_values.yaml.j2"
-        dest: "/tmp/{{ item }}_helm_values.yaml"
+        src: "{{ item}}/{{ item }}_helm_values.yml.j2"
+        dest: "/tmp/{{ item }}_helm_values.yml"
 
     - name: deploy
       kubernetes.core.helm:
@@ -40,6 +40,6 @@
 
     - name: cleanup files
       file:
-        name: "/tmp/{{ item }}_helm_values.yaml"
+        name: "/tmp/{{ item }}_helm_values.yml"
         state: absent
   when: home_apps.heimdall

@@ -44,4 +44,4 @@
       file:
         name: "/tmp/{{ item }}_helm_values.yml"
         state: absent
-  when: home_apps.heimdall
+  when: home_apps.[item]

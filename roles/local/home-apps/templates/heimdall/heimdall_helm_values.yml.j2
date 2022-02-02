@@ -8,7 +8,7 @@ ingress:
       - path: /
         pathType: Prefix
     tls:
-      - secretName: {{ tls-ingress }}
+      - secretName: {{ tls_secret }}
         hosts:
           - heimdall.{{ public_dns_name }}
 

@@ -37,6 +37,8 @@
         create_namespace: no
         wait: True
         update_repo_cache: yes
+        values_files:
+          - "/tmp/{{ item }}_helm_values.yml
 
 #    - name: cleanup files
 #      file:

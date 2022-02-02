@@ -26,7 +26,7 @@
 
     - name: copy over values file
       template:
-        src: "{{ hostvars[inventory_hostname][item].role_name}}/{{ hostvars[inventory_hostname][item].role_name}}_values.yaml.j2"
+        src: "{{ [item]}}/{{ hostvars[inventory_hostname][item].role_name}}_values.yaml.j2"
         dest: "/tmp/{{ hostvars[inventory_hostname][item].role_name}}_values.yaml"
 
     - name: deploy

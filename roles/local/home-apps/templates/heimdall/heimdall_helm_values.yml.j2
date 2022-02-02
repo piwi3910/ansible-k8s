@@ -3,14 +3,14 @@ ingress:
   main:
     enabled: true
     hosts:
-    - host: heimdall.{{ public_dns_name }}
+    - host: {{ app_dns_name }}.{{ public_dns_name }}
       paths:
       - path: /
         pathType: Prefix
     tls:
       - secretName: {{ tls_secret }}
         hosts:
-          - heimdall.{{ public_dns_name }}
+          - {{ app_dns_name }}.{{ public_dns_name }}
 
 persistence:
   config:

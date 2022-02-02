@@ -7,12 +7,12 @@
 
     - name: add chart repo
       kubernetes.core.helm_repository:
-        name: "{{  item.role_chart_name.split('/')[0] | lower }}"
-        repo_url: "{{ item.role_repo_url }}"
+        name: "{{  "{{ item }}".role_chart_name.split('/')[0] | lower }}"
+        repo_url: "{{ "{{ item }}".role_repo_url }}"
 
     - name: Create namespace
       kubernetes.core.k8s:
-        name: "{{ item.role_namespace }}"
+        name: "{{ "{{ item }}".role_namespace }}"
         api_version: v1
         kind: namespace
         state: present
@@ -26,20 +26,20 @@
 
     - name: copy over values file
       template:
-        src: "{{ item.role_name}}_values.yaml.j2"
-        dest: "/tmp/{{ item.role_name}}_values.yaml"
+        src: "{{ "{{ item }}".role_name}}_values.yaml.j2"
+        dest: "/tmp/{{ "{{ item }}".role_name}}_values.yaml"
 
     - name: deploy
       kubernetes.core.helm:
-        name: "{{ item.role_name}}"
-        chart_ref: "{{ item.role_chart_name }}"
-        release_namespace: "{{ item.role_namespace }}"
+        name: "{{ "{{ item }}".role_name}}"
+        chart_ref: "{{ "{{ item }}".role_chart_name }}"
+        release_namespace: "{{ "{{ item }}".role_namespace }}"
         create_namespace: no
         wait: True
         update_repo_cache: yes
 
     - name: cleanup files
       file:
-        name: "/tmp/{{ item.role_name }}_values.yaml"
+        name: "/tmp/{{ "{{ item }}".role_name }}_values.yaml"
         state: absent
   when: "deploy_{{ item }}"

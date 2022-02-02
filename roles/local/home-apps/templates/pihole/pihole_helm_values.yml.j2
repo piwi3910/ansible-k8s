@@ -1,0 +1,37 @@
+---
+ingress:
+  enabled: true
+  hosts:
+    - {{ hostvars[inventory_hostname][item].app_dns_name }}.{{ public_dns_name }}
+  path: /
+  tls:
+    - secretName: {{ hostvars[inventory_hostname][item].tls_secret }}
+      hosts:
+        - {{ hostvars[inventory_hostname][item].app_dns_name }}.{{ public_dns_name }}
+
+podDnsConfig:
+  enabled: true
+  policy: "None"
+  nameservers:
+  - {{ network_dns[0] }}
+  - {{ network_dns[1] }}
+
+persistentVolumeClaim:
+  enabled: true
+  size: "2048Mi"
+
+serviceWeb:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: pihole-svc
+  type: LoadBalancer
+
+serviceDns:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: pihole-svc
+  type: LoadBalancer
+
+DNS1: "{{ network_dns[0] }}"
+DNS2: "{{ network_dns[1] }}"
+
+extraEnvVars:
+  TZ: {{ timezone }}

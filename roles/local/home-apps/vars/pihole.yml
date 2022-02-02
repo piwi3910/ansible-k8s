@@ -1,0 +1,5 @@
+role_namespace: "home-apps"
+tls_secret: "tls-ingress-pihole"
+role_repo_url: "https://mojo2600.github.io/pihole-kubernetes/"
+role_chart_name: "mojo2600/pihole"
+app_dns_name: "pihole"

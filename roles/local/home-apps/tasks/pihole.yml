@@ -1,0 +1,47 @@
+---
+- block:
+    - name: inlude vars for enabled apps
+      include_vars:
+        file: "{{ item }}.yml"
+        name: "{{ item }}"
+
+    - name: add chart repo
+      kubernetes.core.helm_repository:
+        name: "{{ hostvars[inventory_hostname][item].role_chart_name.split('/')[0] | lower }}"
+        repo_url: "{{ hostvars[inventory_hostname][item].role_repo_url }}"
+
+    - name: Create namespace
+      kubernetes.core.k8s:
+        name: "{{ hostvars[inventory_hostname][item].role_namespace }}"
+        api_version: v1
+        kind: namespace
+        state: present
+
+    - name: create tls secret for ingress
+      become: yes
+      become_user: kube
+      kubernetes.core.k8s:
+        state: present
+        template: "{{ item }}/secret.yml.j2"
+
+    - name: copy over values file
+      template:
+        src: "{{ item }}/{{ item }}_helm_values.yml.j2"
+        dest: "/tmp/{{ item }}_helm_values.yml"
+
+    - name: deploy
+      kubernetes.core.helm:
+        name: "{{ item }}"
+        chart_ref: "{{ hostvars[inventory_hostname][item].role_chart_name }}"
+        release_namespace: "{{ hostvars[inventory_hostname][item].role_namespace }}"
+        create_namespace: no
+        wait: True
+        update_repo_cache: yes
+        values_files:
+          - "/tmp/{{ item }}_helm_values.yml"
+
+    - name: cleanup files
+      file:
+        name: "/tmp/{{ item }}_helm_values.yml"
+        state: absent
+  when: hostvars[inventory_hostname].home_apps[item]

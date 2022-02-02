@@ -25,7 +25,7 @@ serviceWeb:
     enabled: false
   annotations:
     metallb.universe.tf/allow-shared-ip: pihole-svc
-  type: LoadBalancer
+  type: ClusterIP
 
 serviceDns:
   annotations:

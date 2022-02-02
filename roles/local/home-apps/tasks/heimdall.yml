@@ -26,12 +26,12 @@
 
     - name: copy over values file
       template:
-        src: "{{ [item]}}/{{ hostvars[inventory_hostname][item].role_name}}_values.yaml.j2"
-        dest: "/tmp/{{ hostvars[inventory_hostname][item].role_name}}_values.yaml"
+        src: "{{ item}}/{{ item }}_values.yaml.j2"
+        dest: "/tmp/{{ item }}_values.yaml"
 
     - name: deploy
       kubernetes.core.helm:
-        name: "{{ hostvars[inventory_hostname][item].role_name}}"
+        name: "{{ item }}"
         chart_ref: "{{ hostvars[inventory_hostname][item].role_chart_name }}"
         release_namespace: "{{ hostvars[inventory_hostname][item].role_namespace }}"
         create_namespace: no
@@ -40,6 +40,6 @@
 
     - name: cleanup files
       file:
-        name: "/tmp/{{ hostvars[inventory_hostname][item].role_name }}_values.yaml"
+        name: "/tmp/{{ item }}_values.yaml"
         state: absent
   when: home_apps.heimdall

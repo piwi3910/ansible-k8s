@@ -3,36 +3,36 @@
     - debug:
         msg: "Starting deploy off {{ item }}"
 
-    - name: inlude vars for enabled apps
+    - name: "{{ item }}: inlude vars for enabled apps"
       include_vars:
         file: "{{ item }}.yml"
         name: "{{ item }}"
 
-    - name: add chart repo
+    - name: "{{ item }}: add chart repo"
       kubernetes.core.helm_repository:
         name: "{{ hostvars[inventory_hostname][item].role_chart_name.split('/')[0] | lower }}"
         repo_url: "{{ hostvars[inventory_hostname][item].role_repo_url }}"
 
-    - name: Create namespace
+    - name: "{{ item }}: Create namespace"
       kubernetes.core.k8s:
         name: "{{ hostvars[inventory_hostname][item].role_namespace }}"
         api_version: v1
         kind: namespace
         state: present
 
-    - name: create tls secret for ingress
+    - name: "{{ item }}: create tls secret for ingress"
       become: yes
       become_user: kube
       kubernetes.core.k8s:
         state: present
         template: "{{ item }}/secret.yml.j2"
 
-    - name: copy over values file
+    - name: "{{ item }}: copy over values file"
       template:
         src: "{{ item }}/{{ item }}_helm_values.yml.j2"
         dest: "/tmp/{{ item }}_helm_values.yml"
 
-    - name: deploy
+    - name: "{{ item }}: deploy"
       kubernetes.core.helm:
         name: "{{ item }}"
         chart_ref: "{{ hostvars[inventory_hostname][item].role_chart_name }}"
@@ -43,7 +43,7 @@
         values_files:
           - "/tmp/{{ item }}_helm_values.yml"
 
-    - name: cleanup files
+    - name: "{{ item }}: cleanup files"
       file:
         name: "/tmp/{{ item }}_helm_values.yml"
         state: absent

@@ -1,0 +1,26 @@
+- name: add k8s-at-home chart repo
+  kubernetes.core.helm_repository:
+    name: k8s-at-home
+    repo_url: "https://k8s-at-home.com/charts/"
+
+- name: install heimdall
+  block:
+    - name: copy over values file
+      template:
+        src: "heimdall_helm_values.yml.j2"
+        dest: "/tmp/heimdall_helm_values.yml"
+
+    - name: deploy heimdall
+      kubernetes.core.helm:
+        name: heimdall
+        chart_ref: k8s-at-home/heimdall
+        release_namespace: home-apps
+        create_namespace: yes
+        wait: True
+        values_files:
+          - /tmp/heimdall_helm_values.yml
+
+    - name: cleanup files
+      file:
+        name: /tmp/heimdall_helm_values.yml
+        state: absent

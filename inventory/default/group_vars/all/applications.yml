@@ -4,3 +4,12 @@
 
 deploy_rancher: true
 deploy_kubernetes_dashboard: true
+
+
+
+
+
+
+#### Home Apps
+deploy_heimdall: true
+deploy_pi_hole: true

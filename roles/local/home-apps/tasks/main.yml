@@ -1,4 +1,4 @@
 ---
-- name: import tasks for enabled apps
-  import_tasks: "{{ item }}.yml"
+- name: include tasks for enabled apps
+  include_tasks: "{{ item }}.yml"
   loop: "{{ apps }}"

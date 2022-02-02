@@ -2,7 +2,7 @@
 - block:
     - name: Read in task specific vars
       include_vars:
-        file: heimdall.yml
+        file: vars/heimdall.yml
         name: heimdall
 
     - name: add chart repo

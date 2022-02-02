@@ -42,4 +42,4 @@
       file:
         name: "/tmp/{{ [item].role_name }}_values.yaml"
         state: absent
-  when: item.deploy
+  when: "{{ [item].deploy }}"

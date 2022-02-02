@@ -22,7 +22,7 @@
       become_user: kube
       kubernetes.core.k8s:
         state: present
-        template: "secret.yml.j2"
+        template: "{{ item }}/secret.yml.j2"
 
     - name: copy over values file
       template:

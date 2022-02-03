@@ -57,6 +57,7 @@
         proxied: yes
         account_email: "{{ cf_email }}"
         account_api_key: "{{ cf_api }}"
+        solo: yes
         state: present
       when: create_cf_dns_records
   when: hostvars[inventory_hostname].home_apps[item]

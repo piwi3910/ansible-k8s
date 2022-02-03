@@ -1,0 +1,63 @@
+---
+- block:
+    - debug:
+        msg: "Starting deploy off {{ item }}"
+
+    - name: "{{ item }}: inlude vars for enabled apps"
+      include_vars:
+        file: "{{ item }}.yml"
+        name: "{{ item }}"
+
+    - name: "{{ item }}: add chart repo"
+      kubernetes.core.helm_repository:
+        name: "{{ hostvars[inventory_hostname][item].role_chart_name.split('/')[0] | lower }}"
+        repo_url: "{{ hostvars[inventory_hostname][item].role_repo_url }}"
+
+    - name: "{{ item }}: Create namespace"
+      kubernetes.core.k8s:
+        name: "{{ hostvars[inventory_hostname][item].role_namespace }}"
+        api_version: v1
+        kind: namespace
+        state: present
+
+    - name: "{{ item }}: create tls secret for ingress"
+      become: yes
+      become_user: kube
+      kubernetes.core.k8s:
+        state: present
+        template: "{{ item }}/secret.yml.j2"
+
+    - name: "{{ item }}: copy over values file"
+      template:
+        src: "{{ item }}/{{ item }}_helm_values.yml.j2"
+        dest: "/tmp/{{ item }}_helm_values.yml"
+
+    - name: "{{ item }}: deploy"
+      kubernetes.core.helm:
+        name: "{{ item }}"
+        chart_ref: "{{ hostvars[inventory_hostname][item].role_chart_name }}"
+        release_namespace: "{{ hostvars[inventory_hostname][item].role_namespace }}"
+        create_namespace: no
+        wait: True
+        update_repo_cache: yes
+        values_files:
+          - "/tmp/{{ item }}_helm_values.yml"
+
+    - name: "{{ item }}: cleanup files"
+      file:
+        name: "/tmp/{{ item }}_helm_values.yml"
+        state: absent
+
+    - name: "{{ item }}: Create DNS record on CF"
+      community.general.cloudflare_dns:
+        zone: "{{ public_dns_name }}"
+        type: CNAME
+        record: "{{ hostvars[inventory_hostname][item].app_dns_name }}"
+        value: "{{ cf_cname }}"
+        proxied: yes
+        account_email: "{{ cf_email }}"
+        account_api_key: "{{ cf_api }}"
+        solo: yes
+        state: present
+      when: create_cf_dns_records
+  when: hostvars[inventory_hostname].home_apps[item]

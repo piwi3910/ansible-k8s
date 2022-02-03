@@ -7,4 +7,6 @@ network_dns:
 cf_dns_zone: "watteel.dev"
 cf_email: "{{ vault_cf_email }}"
 cf_api: "{{ vault_cf_api }}"
+cf_cname: "piwi3910.ddns.net"
+
 

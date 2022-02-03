@@ -13,3 +13,5 @@ use_internal_docker_repo: true
 internal_docker_repo_url: "192.168.0.35:1234"
 internal_docker_repo_username: "admin"
 internal_docker_repo_password: "Jbz49teq01!"
+
+create_cf_dns_records: true

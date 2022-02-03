@@ -21,10 +21,10 @@ persistentVolumeClaim:
   size: "2048Mi"
 
 serviceWeb:
+  http:
+    enabled: true
   https:
     enabled: false
-  annotations:
-    metallb.universe.tf/allow-shared-ip: pihole-svc
   type: ClusterIP
 
 serviceDns:

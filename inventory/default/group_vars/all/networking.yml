@@ -4,3 +4,7 @@ network_dns:
   - 192.168.0.4
   - 192.168.0.36
 
+cf_dns_zone: "watteel.dev"
+cf_email: "{{ vault_cf_email }}"
+cf_api: "{{ vault_cf_api }}"
+

@@ -52,7 +52,7 @@
       community.general.cloudflare_dns:
         zone: "{{ public_dns_name }}"
         type: CNAME
-        record: "{{ app_dns_name }}"
+        record: "{{ hostvars[inventory_hostname][item].app_dns_name }}"
         value: "{{ cf_cname }}"
         proxied: yes
         account_email: "{{ cf_email }}"
